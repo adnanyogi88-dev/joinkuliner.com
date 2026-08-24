@@ -1,0 +1,10 @@
+{
+  "domain": "joinkuliner.com",
+  "safe_from": "2023",
+  "safe_to": "20251011",
+  "total": 2337,
+  "downloaded": 2310,
+  "failed": 25,
+  "quarantined": 2,
+  "rewrite_failures": 0
+}
