@@ -1,0 +1,36 @@
+name: Restore JoinKuliner Website
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.restore-payload/**'
+      - '.github/workflows/restore-website.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: restore-joinkuliner
+  cancel-in-progress: false
+
+jobs:
+  restore:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[restore-site]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Restore original static website
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .restore-payload/site.part* > "$RUNNER_TEMP/joinkuliner.zip"
+          unzip -oq "$RUNNER_TEMP/joinkuliner.zip" -d .
+          rm -rf .restore-payload
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Publish complete JoinKuliner website and original interface"
+          git push origin HEAD:main
